@@ -43,6 +43,7 @@ mysql -u root -e "FLUSH PRIVILEGES;"
 
 service apache2 restart
 
+mysql -uncrc -pP455w0rd! twitter < twitter.sql
 mysql -uncrc -pP455w0rd! twitter < users.sql
 mysql -uncrc -pP455w0rd! twitter < posts.sql
 mysql -uncrc -pP455w0rd! twitter < tweets.sql
