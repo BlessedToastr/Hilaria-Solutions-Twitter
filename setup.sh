@@ -25,9 +25,20 @@ DOCRoot='/var/www'
 cd $DOCRoot
 git clone https://github.com/BlessedToastr/Hilaria-Solutions-Twitter.git
 
-mkdir html
+cd Hilaria-Solutions-Twitter
+mysql -u root -e "CREATE DATABASE twitter;"
+mysql -u root -e "CREATE USER 'ncrc'@'%' IDENTIFIED BY 'P455w0rd!';"
+mysql -u root -e "GRANT ALL ON *.* TO 'ncrc'@'%';"
+mysql -u root -e "FLUSH PRIVILEGES;"
+
+mysql -uncrc -pP455w0rd! twitter < twitter.sql
+mysql -uncrc -pP455w0rd! twitter < users.sql
+mysql -uncrc -pP455w0rd! twitter < posts.sql
+mysql -uncrc -pP455w0rd! twitter < tweets.sql
+
+mkdir ../html
 cp -R Hilaria-Solutions-Twitter/html/* html/
-cd html
+cd ../html
 
 cat > /etc/apache2/mods-enabled/dir.conf <<"__EOF__"
 <IfModule mod_dir.c>
@@ -36,17 +47,7 @@ cat > /etc/apache2/mods-enabled/dir.conf <<"__EOF__"
 # vim syntax=apache ts=4 sw=4 sts=4 sr noet
 __EOF__
 
-mysql -u root -e "CREATE DATABASE twitter;"
-mysql -u root -e "CREATE USER 'ncrc'@'%' IDENTIFIED BY 'P455w0rd!';"
-mysql -u root -e "GRANT ALL ON *.* TO 'ncrc'@'%';"
-mysql -u root -e "FLUSH PRIVILEGES;"
-
 service apache2 restart
-
-mysql -uncrc -pP455w0rd! twitter < twitter.sql
-mysql -uncrc -pP455w0rd! twitter < users.sql
-mysql -uncrc -pP455w0rd! twitter < posts.sql
-mysql -uncrc -pP455w0rd! twitter < tweets.sql
 
 cat > /var/www/html/core/database/connection.php <<"__EOF__"
 <?php
@@ -130,4 +131,4 @@ service mysql restart
 echo "Install Complete"
 echo "MySQL Creds: ncrc:P455w0rd!"
 
-reboot
+echo "REBOOT NEEDED!"
